@@ -13,8 +13,8 @@ def trim(filename_inn, filename_out):
         names=['label', 'tweet'],
         encoding='latin1'
     )
-    # data_trim = data.sample(200000)
-    data.to_csv(filename_out)
+    data_trim = data.sample(200)
+    data.to_csv('tiny'+filename_out)
 
 def pp(filename):
     """
@@ -120,5 +120,5 @@ def pp(filename):
 
 if __name__ == '__main__':
     # pp('data_trim.csv')
-    #trim('training.1600000.processed.noemoticon.csv', 'archive/training.1600000.processed.noemoticon_trimmed.csv')
-    pp('archive/training.1600000.processed.noemoticon_trimmed.csv')
+    trim('training.1600000.processed.noemoticon.csv', 'archive/training.1600000.processed.noemoticon_trimmed.csv')
+    # pp('archive/training.1600000.processed.noemoticon_trimmed.csv')

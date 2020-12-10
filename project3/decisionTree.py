@@ -6,6 +6,7 @@ from sklearn.tree import DecisionTreeClassifier
 from sklearn.metrics import classification_report, confusion_matrix, accuracy_score
 from sklearn.model_selection import train_test_split
 from sklearn.feature_extraction.text import TfidfVectorizer
+from playsound import playsound
 
 
 def decision_tree(filename):
@@ -24,18 +25,23 @@ def decision_tree(filename):
     X_tr, X_te, y_tr, y_te = train_test_split(vectorized, data['label'],test_size = 0.2)
 
     clf = DecisionTreeClassifier(criterion="gini", splitter='best')
-    print(np.shape(X_tr))
-    print(np.shape(y_tr))
-    print(np.shape(X_te))
-    print(np.shape(y_te))
-    print(type(X_te))
-    clf.fit(X_tr, y_tr)
 
-    pred = clf.predict(X_te)
+    sounds = ['my-man.mp3']
 
-    print(confusion_matrix(y_te, pred))
-    print(classification_report(y_te, pred))
-    print(accuracy_score(y_te, pred))
+    playsound('sounds/my-man.mp3')
+
+    # print(np.shape(X_tr))
+    # print(np.shape(y_tr))
+    # print(np.shape(X_te))
+    # print(np.shape(y_te))
+    # print(type(X_te))
+    # clf.fit(X_tr, y_tr)
+    #
+    # pred = clf.predict(X_te)
+    #
+    # print(confusion_matrix(y_te, pred))
+    # print(classification_report(y_te, pred))
+    # print(accuracy_score(y_te, pred))
 
 
 

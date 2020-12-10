@@ -26,22 +26,22 @@ def decision_tree(filename):
 
     clf = DecisionTreeClassifier(criterion="gini", splitter='best')
 
-    sounds = ['my-man.mp3']
+    sounds = ['sounds/Not_Gay_Sex.mp3', 'sounds/Objection_Hearsay.mp3', 'sounds/Rock_Flag_and_Eagle.mp3', 'sounds/The_good_lords_going_down_on_me.mp3']
 
-    playsound('sounds/my-man.mp3')
+    playsound(sounds[np.random.randint(0,4)])
 
-    # print(np.shape(X_tr))
-    # print(np.shape(y_tr))
-    # print(np.shape(X_te))
-    # print(np.shape(y_te))
-    # print(type(X_te))
-    # clf.fit(X_tr, y_tr)
-    #
-    # pred = clf.predict(X_te)
-    #
-    # print(confusion_matrix(y_te, pred))
-    # print(classification_report(y_te, pred))
-    # print(accuracy_score(y_te, pred))
+    print(np.shape(X_tr))
+    print(np.shape(y_tr))
+    print(np.shape(X_te))
+    print(np.shape(y_te))
+    print(type(X_te))
+    clf.fit(X_tr, y_tr)
+
+    pred = clf.predict(X_te)
+
+    print(confusion_matrix(y_te, pred))
+    print(classification_report(y_te, pred))
+    print(accuracy_score(y_te, pred))
 
 
 

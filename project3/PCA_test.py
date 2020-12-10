@@ -33,11 +33,14 @@ def pca_svm(filename):
     clf.fit(X_tr, y_tr)
     y_pred = clf.predict(X_te)
 
-    sounds = ['Not Gay Sex.mp3', 'Objection Hearsay.mp3', 'Rock Flag and Eagle.mp3', 'The good lords going down on me.mp3']
+    sounds = ['sounds/Not_Gay_Sex.mp3', 'sounds/Objection_Hearsay.mp3', 'sounds/Rock_Flag_and_Eagle.mp3', 'sounds/The_good_lords_going_down_on_me.mp3']
 
     playsound(sounds[np.random.randint(0,4)])
+
     plot_confusion_matrix(clf, X_te, y_te)
     accuracy = accuracy_score(y_te, y_pred)
+    accuracy = accuracy_score(y_te, y_pred)
+    print(accuracy)
 
 
 if __name__ == '__main__':

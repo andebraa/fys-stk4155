@@ -3,20 +3,11 @@ from nltk.stem.snowball import SnowballStemmer
 from sklearn.feature_extraction.text import TfidfVectorizer
 import pandas as pd
 import numpy as np
+from playsound import playsound
 
-def trim(filename_inn, filename_out):
-    """
-    simply reads csv file, filters out
-    """
-    data = pd.read_csv('archive/'+filename_inn,
-        usecols = [0,5],
-        names=['label', 'tweet'],
-        encoding='latin1'
-    )
-    data_trim = data.sample(200)
-    data_trim.to_csv('tiny'+filename_out)
 
-def pp(filename):
+
+def pp(filename_in, filename_out):
     """
     takes the filename of a csv file and edits it in preperation for sentiment analysis.
     writes it to file
@@ -31,7 +22,12 @@ def pp(filename):
 
 
 
-    data = pd.read_csv(filename)
+    # data = pd.read_csv('archive/'+filename_in, #note; this is for testing purposes
+    #     usecols = [0,5],
+    #     names=['label', 'tweet'],
+    #     encoding='latin1'
+    # )
+    data = pd.read_csv('archive/'+filename_in)
 
 
     """
@@ -40,7 +36,7 @@ def pp(filename):
     users_reg = r"(@[\w]{1,15}\s)"
 
     url_reg = r"(http(?:s){0,1}://[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b(?:[-a-zA-Z0-9()@:%_\+.~#?&//=]*))"
-    misc_reg = r"([^a-zA-Z:\(\)\[\] -'])"
+    misc_reg = r"([^a-zA-Z:\(\)\[\] -'#])"
     amps_reg = r"&amp;", # ampresand &
     lt_reg = r"&lt;", # less than <
     gt_reg = r"&gt;", # greater than >
@@ -127,16 +123,12 @@ def pp(filename):
 
 
     # replace n't ending of words with not
-    data = data.replace(to_replace=r"can't|cannot", value=r"can not", regex=True)
-    data = data.replace(to_replace=r"won't", value=r"will not", regex=True)
-    data = data.replace(to_replace=r"([a-zA-Z]+)(n't)",
-                    value=r"\1 not",
-                    regex=True)
+    data = data.replace(to_replace=r"[a-zA-Z]+n't", value=r"not", regex=True)
 
     #removing misc
 
     data['tweet'] = data['tweet'].replace(to_replace=[quote_reg, gt_reg, lt_reg, amps_reg, misc_reg],
-                                          value=['', '', '', '', ''],
+                                          value=[' ', ' ', ' ', ' ', ' '],
                                           regex=True)
 
 
@@ -153,17 +145,17 @@ def pp(filename):
                                           value=r"\1\1",
                                           regex=True)
 
-    # data['tweet'] = data['tweet'].replace(stopwords_reg, '', regex=True)
-    data['tweet'] = data['tweet'].replace(r"'", '', regex=True)
+
+    data['tweet'] = data['tweet'].replace(r"'", ' ', regex=True)
     data['tweet'] = data['tweet'].replace(r"\s+", ' ', regex=True)
 
     #negations
-    negation_regex = r"\b{}\b".format(r'\b|\b'.join(negation_list))
-    data = data.replace(to_replace=negation_regex, value=r"not", regex=True)
+    # negation_regex = r"\b{}\b".format(r'\b|\b'.join(negation_list))
+    # data = data.replace(to_replace=negation_regex, value=r"not", regex=True)
 
     #removing stopwords
     stopword_regex = r"\b{}\b".format(r'\b|\b'.join(stopword_list))
-    data = data.replace(to_replace=stopword_regex, value=r"", regex=True)
+    data = data.replace(to_replace=stopword_regex, value=r" ", regex=True)
 
     # remove all apostrophe
     data = data.replace(to_replace=r"'", value=r"", regex=True)
@@ -177,17 +169,33 @@ def pp(filename):
 
 
 
-    # 
-    # vectorizer = TfidfVectorizer(min_df = 0.1, max_df = 0.8)
-    # vectorized = vectorizer.fit_transform(data['tweet'].to_numpy())
-    # print(np.shape(vectorized))
 
-    data.to_csv('data_trim_processed.csv')
+    vectorizer = TfidfVectorizer()
+    vectorized = vectorizer.fit_transform(data['tweet'].to_numpy())
+    print(np.shape(vectorized))
+
+    sounds = ['sounds/Not_Gay_Sex.mp3', 'sounds/Objection_Heresay.mp3','sounds/Rock_Flag_and_Eagle.mp3', 'sounds/The_good_lords_goin_down_on_me.mp3','sounds/my-man.mp3', 'sounds/idubbbz-im-gay-free-download.mp3']
+
+    # playsound(sounds[np.random.randint(0,6)])
+
+    data.to_csv('archive/'+filename_out)
+
+
+def trim(filename_inn, filename_out):
+    """
+    simply reads csv file, filters out
+    """
+    data = pd.read_csv('archive/'+filename_inn,
+        usecols = [0,5],
+        names=['label', 'tweet'],
+        encoding='latin1'
+    )
+    data_trim = data.sample(100000)
+    data_trim.to_csv('archive/'+filename_out)
 
 
 
 
 if __name__ == '__main__':
-    # pp('data_trim.csv')
-    # trim('training.1600000.processed.noemoticon.csv', 'training.1600000.processed.noemoticon_trimmed.csv')
-    pp('archive/tinytraining.1600000.processed.noemoticon_trimmed.csv')
+    trim('original_data.csv', 'data_trim_1E5.csv')
+    pp('data_trim_1E5.csv', 'data_trim_edit_1E5.csv')

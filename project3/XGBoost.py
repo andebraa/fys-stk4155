@@ -9,7 +9,7 @@ from playsound import playsound
 
 from sklearn.metrics import plot_confusion_matrix, accuracy_score
 
-def XGBoost(filename, eta):
+def XGBoost(filename, depth):
 
     data = pd.read_csv('archive/' +filename,
         usecols=['label', 'tweet']
@@ -24,7 +24,7 @@ def XGBoost(filename, eta):
 
     X_tr, X_te, y_tr, y_te = train_test_split(vectorized, data['label'],test_size = 0.2)
 
-    xgb_model = xgb.XGBClassifier(eta = eta, nthread = 4).fit(X_tr, y_tr)
+    xgb_model = xgb.XGBClassifier(max_depth = depth, nthread = 4).fit(X_tr, y_tr)
     y_pred = xgb_model.predict(X_te)
     y_pred_tr = xgb_model.predict(X_tr)
 
@@ -44,18 +44,18 @@ def XGBoost(filename, eta):
 
 if __name__ == '__main__':
 
-    etas = [0.1, 0.3, 0.6, 0.8, 1, 1.3]
-    accuracy = np.zeros(len(etas))
-    accuracy_train = np.zeros(len(etas))
-    for i, eta in enumerate(etas):
+    depths = [1, 3, 4, 6, 11, 15]
+    accuracy = np.zeros(len(depths))
+    accuracy_train = np.zeros(len(depths))
+    for i, depth in enumerate(depths):
 
-        accuracy[i], accuracy_train[i]=XGBoost('data_trim_edit_1E4.csv', eta)
+        accuracy[i], accuracy_train[i]=XGBoost('data_trim_edit_1E4.csv', depth)
 
     plt.style.use("ggplot")
-    plt.plot(etas, accuracy_train, label='train')
-    plt.plot(etas, accuracy, label='test')
+    plt.plot(depths, accuracy_train, label='train')
+    plt.plot(depths, accuracy, label='test')
     plt.title('XGBoost', size=16)
-    plt.xlabel('Learning rate', size=14)
+    plt.xlabel('Maximum tree depth', size=14)
     plt.ylabel('Accuracy score', size=14)
     plt.legend()
     plt.show()

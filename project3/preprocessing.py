@@ -101,6 +101,7 @@ def pp(filename_in, filename_out):
 
     #removing url and usersnames before emoticons due to this interfering with emoticons
     data['tweet'] = data['tweet'].replace(to_replace=[url_reg, users_reg], value=[' URL ', ' USER '], regex=True)
+    print(np.sum(data['tweet'].str.contains(' USER ')))
 
     #remove lines with both smiles and frowns, as this fuckes with the algorithm
     #also remove all liens with smilies in the delete reges for the same reason
@@ -197,5 +198,5 @@ def trim(filename_inn, filename_out):
 
 
 if __name__ == '__main__':
-    trim('original_data.csv', 'temp_data_trim_2E5.csv')
+    # trim('original_data.csv', 'temp_data_trim_2E5.csv')
     pp('temp_data_trim_2E5.csv', 'temp_data_trim_processed_1E5.csv')

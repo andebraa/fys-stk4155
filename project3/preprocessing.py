@@ -150,8 +150,8 @@ def pp(filename_in, filename_out):
     data['tweet'] = data['tweet'].replace(r"\s+", ' ', regex=True)
 
     #negations
-    # negation_regex = r"\b{}\b".format(r'\b|\b'.join(negation_list))
-    # data = data.replace(to_replace=negation_regex, value=r"not", regex=True)
+    negation_regex = r"\b{}\b".format(r'\b|\b'.join(negation_list))
+    data = data.replace(to_replace=negation_regex, value=r"not", regex=True)
 
     #removing stopwords
     stopword_regex = r"\b{}\b".format(r'\b|\b'.join(stopword_list))
@@ -160,7 +160,7 @@ def pp(filename_in, filename_out):
     # remove all apostrophe
     data = data.replace(to_replace=r"'", value=r"", regex=True)
 
-    # splitting data
+    # stemming data
     tokens = data['tweet'].str.split(' ')
 
     stemmer = SnowballStemmer('english');
@@ -170,13 +170,13 @@ def pp(filename_in, filename_out):
 
 
 
-    vectorizer = TfidfVectorizer()
+    vectorizer = TfidfVectorizer(max_df = 0.8)
     vectorized = vectorizer.fit_transform(data['tweet'].to_numpy())
     print(np.shape(vectorized))
 
     sounds = ['sounds/Not_Gay_Sex.mp3', 'sounds/Objection_Heresay.mp3','sounds/Rock_Flag_and_Eagle.mp3', 'sounds/The_good_lords_goin_down_on_me.mp3','sounds/my-man.mp3', 'sounds/idubbbz-im-gay-free-download.mp3']
 
-    # playsound(sounds[np.random.randint(0,6)])
+    playsound(sounds[np.random.randint(0,6)])
 
     data.to_csv('archive/'+filename_out)
 
@@ -190,12 +190,12 @@ def trim(filename_inn, filename_out):
         names=['label', 'tweet'],
         encoding='latin1'
     )
-    data_trim = data.sample(100000)
+    data_trim = data.sample(200000)
     data_trim.to_csv('archive/'+filename_out)
 
 
 
 
 if __name__ == '__main__':
-    trim('original_data.csv', 'data_trim_1E5.csv')
-    pp('data_trim_1E5.csv', 'data_trim_edit_1E5.csv')
+    trim('original_data.csv', 'temp_data_trim_2E5.csv')
+    pp('temp_data_trim_2E5.csv', 'temp_data_trim_processed_1E5.csv')

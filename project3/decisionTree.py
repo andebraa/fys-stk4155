@@ -15,35 +15,41 @@ def decision_tree(filename):
     )
     print(data)
 
+    # data = pd.read_csv(filename, #note; this is for testing purposes
+    #     usecols = [0,5],
+    #     names=['label', 'tweet'],
+    #     encoding='latin1'
+    # )
 
 
-    vectorizer = TfidfVectorizer(max_features=2500, min_df = 1, max_df = 0.8) #0.8 removes all words that occur in more than 0.8 percent of tweets, which is a LOT
+
+    vectorizer = TfidfVectorizer() #0.8 removes all words that occur in more than 0.8 percent of tweets, which is a LOT
     vectorized = vectorizer.fit_transform(data['tweet'].to_numpy())
     print(np.shape(vectorized))
 
 
     X_tr, X_te, y_tr, y_te = train_test_split(vectorized, data['label'],test_size = 0.2)
 
-    clf = DecisionTreeClassifier(criterion="gini", splitter='best')
+    clf = DecisionTreeClassifier(criterion="gini", splitter='best', max_depth=100)
 
-    sounds = ['sounds/Not_Gay_Sex.mp3', 'sounds/Objection_Hearsay.mp3', 'sounds/Rock_Flag_and_Eagle.mp3', 'sounds/The_good_lords_going_down_on_me.mp3']
 
-    playsound(sounds[np.random.randint(0,4)])
-
-    print(np.shape(X_tr))
-    print(np.shape(y_tr))
-    print(np.shape(X_te))
-    print(np.shape(y_te))
-    print(type(X_te))
     clf.fit(X_tr, y_tr)
 
-    pred = clf.predict(X_te)
 
-    print(confusion_matrix(y_te, pred))
-    print(classification_report(y_te, pred))
-    print(accuracy_score(y_te, pred))
+    pred_train = clf.predict(X_tr)
+    pred_test = clf.predict(X_te)
+
+    # calculate accuracy score
+    test_acc = accuracy_score(y_te, pred_test)
+    train_acc = accuracy_score(y_tr , pred_train)
+    print(test_acc)
+    print(train_acc)
+
+    sounds = ['sounds/Not_Gay_Sex.mp3', 'sounds/Objection_Heresay.mp3','sounds/Rock_Flag_and_Eagle.mp3', 'sounds/The_good_lords_goin_down_on_me.mp3','sounds/my-man.mp3', 'sounds/idubbbz-im-gay-free-download.mp3']
+
+    playsound(sounds[np.random.randint(0,6)])
 
 
 
 if __name__=='__main__':
-    decision_tree('data_trim_processed.csv')
+    decision_tree('archive/data_trim_processed_1E5.csv')

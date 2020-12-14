@@ -9,7 +9,7 @@ from playsound import playsound
 
 from sklearn.metrics import plot_confusion_matrix, accuracy_score
 
-def pca_svm(filename):
+def XGBoost(filename, eta):
 
     data = pd.read_csv('archive/' +filename,
         usecols=['label', 'tweet']
@@ -24,7 +24,7 @@ def pca_svm(filename):
 
     X_tr, X_te, y_tr, y_te = train_test_split(vectorized, data['label'],test_size = 0.2)
 
-    xgb_model = xgb.XGBClassifier().fit(X_tr, y_tr)
+    xgb_model = xgb.XGBClassifier(eta = eta, nthread = 4).fit(X_tr, y_tr)
     y_pred = xgb_model.predict(X_te)
     y_pred_tr = xgb_model.predict(X_tr)
 
@@ -37,8 +37,25 @@ def pca_svm(filename):
 
     playsound(sounds[np.random.randint(0,6)])
 
+    return accuracy, accuracy_train
+
 
 
 
 if __name__ == '__main__':
-    pca_svm('data_trim_edit_1E4.csv')
+
+    etas = [0.1, 0.3, 0.6, 0.8, 1, 1.3]
+    accuracy = np.zeros(len(etas))
+    accuracy_train = np.zeros(len(etas))
+    for i, eta in enumerate(etas):
+
+        accuracy[i], accuracy_train[i]=XGBoost('data_trim_edit_1E4.csv', eta)
+
+    plt.style.use("ggplot")
+    plt.plot(etas, accuracy_train, label='train')
+    plt.plot(etas, accuracy, label='test')
+    plt.title('XGBoost', size=16)
+    plt.xlabel('Learning rate', size=14)
+    plt.ylabel('Accuracy score', size=14)
+    plt.legend()
+    plt.show()

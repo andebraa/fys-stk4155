@@ -3,7 +3,6 @@ from nltk.stem.snowball import SnowballStemmer
 from sklearn.feature_extraction.text import TfidfVectorizer
 import pandas as pd
 import numpy as np
-from playsound import playsound
 
 
 
@@ -16,17 +15,6 @@ def pp(filename_in, filename_out):
         filename(string): csv file with data
 
     """
-    #TODO:
-    #remove all two (and one?) character words
-    #remove ! ?
-
-
-
-    # data = pd.read_csv('archive/'+filename_in, #note; this is for testing purposes
-    #     usecols = [0,5],
-    #     names=['label', 'tweet'],
-    #     encoding='latin1'
-    # )
     data = pd.read_csv('archive/'+filename_in)
 
 
@@ -101,7 +89,6 @@ def pp(filename_in, filename_out):
 
     #removing url and usersnames before emoticons due to this interfering with emoticons
     data['tweet'] = data['tweet'].replace(to_replace=[url_reg, users_reg], value=[' URL ', ' USER '], regex=True)
-    print(np.sum(data['tweet'].str.contains(' USER ')))
 
     #remove lines with both smiles and frowns, as this fuckes with the algorithm
     #also remove all liens with smilies in the delete reges for the same reason
@@ -173,11 +160,6 @@ def pp(filename_in, filename_out):
 
     vectorizer = TfidfVectorizer(max_df = 0.8)
     vectorized = vectorizer.fit_transform(data['tweet'].to_numpy())
-    print(np.shape(vectorized))
-
-    sounds = ['sounds/Not_Gay_Sex.mp3', 'sounds/Objection_Heresay.mp3','sounds/Rock_Flag_and_Eagle.mp3', 'sounds/The_good_lords_goin_down_on_me.mp3','sounds/my-man.mp3', 'sounds/idubbbz-im-gay-free-download.mp3']
-
-    playsound(sounds[np.random.randint(0,6)])
 
     data.to_csv('archive/'+filename_out)
 

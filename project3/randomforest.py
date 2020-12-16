@@ -6,15 +6,19 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import classification_report, confusion_matrix, accuracy_score
 from sklearn.model_selection import train_test_split
 from sklearn.feature_extraction.text import TfidfVectorizer
-from playsound import playsound
-
-#TODO:
-#stemmer!
-#alter stopwords??
-#bigger dataset?
 
 
 def random_forest(filename):
+    """
+    applies the sklearn Random forest algorithm to the dataset specified in filename.
+
+    args:
+        filename (string): location of csv datafile to be read
+    returns:
+        test_acc (float): accuracy of test dataset
+        train_acc (float): accuracy of train dataset
+    """
+
     data = pd.read_csv(filename,
         usecols=['label', 'tweet']
     )
@@ -29,17 +33,14 @@ def random_forest(filename):
 
     pred_te = clf.predict(X_te)
     pred_train = clf.predict(X_tr)
-    print("-----------------------------------")
-    print(classification_report(y_te, pred_te))
-    print(accuracy_score(y_te, pred_te))
-    print("-----------------------------------")
-    print(classification_report(y_tr, pred_train))
-    print(accuracy_score(y_tr, pred_train))
 
-    sounds = ['sounds/Not_Gay_Sex.mp3', 'sounds/Objection_Heresay.mp3','sounds/Rock_Flag_and_Eagle.mp3', 'sounds/The_good_lords_goin_down_on_me.mp3','sounds/my-man.mp3', 'sounds/idubbbz-im-gay-free-download.mp3']
+    # calculate accuracy score
+    test_acc = accuracy_score(y_te, pred_test)
+    train_acc = accuracy_score(y_tr , pred_train)
+    print(test_acc)
+    print(train_acc)
 
-    playsound(sounds[np.random.randint(0,6)])
-
+    return test_acc, train_acc
 
 
 if __name__=='__main__':

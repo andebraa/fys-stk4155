@@ -1,7 +1,6 @@
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
-from playsound import playsound
 from sklearn.metrics import accuracy_score
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.ensemble import AdaBoostClassifier
@@ -10,6 +9,17 @@ from sklearn.feature_extraction.text import CountVectorizer, TfidfVectorizer
 
 
 def adaboost(filename, lamda):
+    """
+    Applies the ada boost sklearn algorithm on the dataset specified in filename. Lambda is
+    the learning rate of the method.
+    args:
+        filename (string): name of csv file. assumed to be in archive/
+        lamda (float): learning rate of the ada boost algorithm
+
+    returns:
+        test_acc (float): accuracy of test dataset
+        train_acc (float): accuracy of train dataset 
+    """
     data = pd.read_csv('archive/' +filename,
         usecols=['label', 'tweet']
     )
@@ -27,16 +37,11 @@ def adaboost(filename, lamda):
                                                                       test_size=0.3)
 
     # AdaBoost
-    lamda = 1
-    eta = [0.9]
-
-
-
     ada_clf = AdaBoostClassifier(DecisionTreeClassifier(criterion='gini',
                                                         max_depth=1),
                                  n_estimators=200,
                                  algorithm='SAMME.R',
-                                 learning_rate=eta[0])
+                                 learning_rate=lamda)
     ada_clf.fit(bow_train, labels_train)
 
     # predict sentiment of tweetss
@@ -46,13 +51,8 @@ def adaboost(filename, lamda):
     # calculate accuracy score
     test_acc = accuracy_score(labels_test, ada_pred_test)
     train_acc = accuracy_score(labels_train , ada_pred_train)
-    print(test_acc)
-    print(train_acc)
 
-    sounds = ['sounds/Not_Gay_Sex.mp3', 'sounds/Objection_Heresay.mp3','sounds/Rock_Flag_and_Eagle.mp3', 'sounds/The_good_lords_goin_down_on_me.mp3','sounds/my-man.mp3', 'sounds/idubbbz-im-gay-free-download.mp3']
-
-    playsound(sounds[np.random.randint(0,6)])
-
+    return test_acc, train_acc
 
 
 if __name__ == '__main__':

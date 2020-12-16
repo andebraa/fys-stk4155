@@ -5,6 +5,9 @@ sed for sentiment analysis, so it was something we wished to look more into.
 Code is essentially divided into a pre processing script, which trims a dataset and strips it for anal
 ysis, and a decision tree and different ensemble method scipts.
 
+the data is downloaded from kaggle : https://www.kaggle.com/kazanova/sentiment140 which is then placed
+into /archive, and reduced with the trim function in pre processing
+
 The layout is in large part very specific for my code setup, as pre processing reads and writes to the
  archive folder.
 
